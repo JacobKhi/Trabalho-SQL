@@ -1,9 +1,3 @@
-/*
-    zé esse codigo foi feito todo a mao entao pode ter alguns erros
-    eu preciso que voce va vendo oq precisa ser alterado
-    essa é so a parte ddl
-*/
-
 -- COMANDOS DDL
 create database if not exists db_jjvgs
 use db_jjvgs
@@ -42,7 +36,7 @@ create table jogo(
 create table plataforma(
     id int not null auto_increment,
     nome VARCHAR(100) not null,
-    tipo ENUM('console', 'pc', 'mobile', 'web', 'cloud') not null, -- Acho que pode deixar como enum
+    tipo ENUM('console', 'pc', 'mobile', 'web', 'cloud') not null,
     primary key (id)
 );
 
@@ -58,7 +52,7 @@ create table jogo_plataforma(
 create table funcionario(
     id int not null auto_increment,
     nome VARCHAR(100) not null,
-    cargo ENUM('dev', 'designer', 'tester', 'produtor', 'gerente') not null, -- Acho que pode deixar como enum
+    cargo ENUM('dev', 'designer', 'tester', 'produtor', 'gerente') not null,
     especialidade VARCHAR(255), -- Deixar como varchar mesmo?
     salario decimal(10, 2) not null check (salario >= 0),
     primary key (id)
@@ -68,7 +62,7 @@ create table projeto(
     id int not null auto_increment,
     jogo_id int not null,
     data_inicio date not null,
-    data_fim date, -- Não achei necessário ser obrigatório
+    data_fim date,
     estado ENUM('ativo', 'pausado', 'concluido') not null,
     foreign key (jogo_id) references jogo(id),
     primary key (id)
@@ -87,7 +81,7 @@ create table projeto_equipe(
 create table atualizacao(
     id int not null auto_increment,
     jogo_id int not null,
-    versao VARCHAR(50) not null, -- Nao sei oq fazer aqui, pois o jogo ja tem uma versao, entao poderiamos atualizar sla
+    versao VARCHAR(50) not null,
     descricao text,
     data_atualizacao date not null,
     foreign key (jogo_id) references jogo(id),
@@ -120,15 +114,21 @@ create table relatorio_bugs(
 );
 
 -- COMANDOS DML
+
+insert into publicadora (nome, pais, contrato_inicio, contrato_fim) values
+('Rockstar Games', 'EUA', '2023-03-01', '2025-03-01'),
+('JJVGS', 'Brasil', null, null),
+('CD Projekt Red', 'Polônia', null, null);
+
 insert into engine (nome, versao, tipo_licenca, site_oficial) values
 ('Unity', '2021.3', 'proprietária', 'https://unity.com'),
 ('Unreal Engine', '5.6', 'gratuita', 'https://www.unrealengine.com/pt-BR'),
 ('Godot', '4.4.1', 'open source', 'https://godotengine.org');
 
-insert into jogo (nome, genero, data_lancamento, estado, engine_id) values
-('CyberBunker2077', 'Sobrevivencia', '2024-10-01', 'lancado', 1),      -- Jogo de sobrevivência em um servidor offline num porão ultra-seguro.
-('Red Debit Deduction', 'Velho-oeste', null, 'em_desenvolvimento', 2), -- A saga do cowboy que tenta fugir das dívidas do cartão.
-('Fiscal Fantasy', 'RPG', '2023-07-20', 'lancado', 3);                 -- Um RPG onde o herói tenta ajustar o orçamento público sem virar vilão.
+insert into jogo (nome, genero, data_lancamento, estado, engine_id, publicadora_id) values
+('CyberBunker2077', 'Sobrevivencia', '2024-10-01', 'lancado', 1, 3),      -- Jogo de sobrevivência em um servidor offline num porão ultra-seguro.
+('Red Debit Deduction', 'Velho-oeste', null, 'em_desenvolvimento', 2, 1), -- A saga do cowboy que tenta fugir das dívidas do cartão.
+('Fiscal Fantasy', 'RPG', '2023-07-20', 'lancado', 3, 2);                 -- Um RPG onde o herói tenta ajustar o orçamento público sem virar vilão.
 
 insert into plataforma (nome, tipo) values
 ('PlayStation 5', 'console'),
@@ -148,25 +148,22 @@ insert into funcionario (nome, cargo, especialidade, salario) values
 ('Marcos Gabriel', 'produtor', null, 9000.00),
 ('Jose Guilherme', 'gerente', null, 12000.00);
 
-insert into projeto (id, jogo_id, data_inicio, data_fim, estado) values
-(1, 1, '2023-01-01', '2024-08-01', 'concluido'),
-(2, 2, '2024-05-10', null, 'ativo');
+insert into projeto (jogo_id, data_inicio, data_fim, estado) values
+(1, '2023-01-01', '2024-08-01', 'concluido'),
+(2, '2024-05-10', null, 'ativo');
 
 insert into projeto_equipe (projeto_id, funcionario_id, papel, data_entrada) values
 (1, 1, 'Programador Líder', '2023-01-01'),
 (1, 2, 'Designer UI', '2023-01-05'),
 (2, 3, 'Tester QA', '2024-05-15');
 
-insert into atualizacao (id, jogo_id, versao, descricao, data_atualizacao) values
-(1, 1, '1.1.0', 'Melhoria de desempenho', '2024-12-01'),
-(2, 3, '1.0.2', 'Correção de bugs gráficos', '2023-09-10');
+insert into atualizacao (jogo_id, versao, descricao, data_atualizacao) values
+(1, '1.1.0', 'Melhoria de desempenho', '2024-12-01'),
+(3, '1.0.2', 'Correção de bugs gráficos', '2023-09-10');
 
 insert into chamado_suporte (jogo_id, funcionario_responsavel_id, titulo, descricao, prioridade, estado, data_abertura) VALUES
 (1, 3, 'Bug no menu principal', 'Menu congela ao clicar em "Iniciar"', 'alta', 'aberto');
 
 insert into relatorio_bugs (chamado_suporte_id, funcionario_tester_id, descricao, estado) values
-(1, 3, 'Bug reproduzido ao clicar rápido 3x', 'em análise');
+(1, 3, 'Bug reproduzido ao clicar rápido 3x', 'em_analise');
 
-insert into publicadora (nome, pais, contrato_inicio, contrato_fim) values
-('Rockstar Games', 'EUA', '2023-03-01', '2025-03-01'),
-('JJVGS', 'Brasil', null, null);
