@@ -5,8 +5,17 @@
 */
 
 -- COMANDOS DDL
-create database db_jjvgs
+create database if not exists db_jjvgs
 use db_jjvgs
+
+create table publicadora( 
+    id int not null auto_increment,
+    nome VARCHAR(100) not null,  
+    pais VARCHAR(50),
+    contrato_inicio date,
+    contrato_fim date,
+    primary key (id)
+);
 
 create table engine(
     id int not null auto_increment,
@@ -23,7 +32,9 @@ create table jogo(
     genero VARCHAR(255) not null, -- Genero pode ser livre?
     data_lancamento date,
     estado ENUM('planejado', 'em_desenvolvimento', 'lancado', 'cancelado') not null,
-    engine_id int,
+    engine_id int not null,
+    publicadora_id int not null,
+    foreign key (publicadora_id) references publicadora(id),
     foreign key (engine_id) references engine(id),
     primary key (id)
 );
@@ -36,9 +47,9 @@ create table plataforma(
 );
 
 create table jogo_plataforma(
-    jogo_id int,
-    plataforma_id int,
-    link_dowload VARCHAR(255),
+    jogo_id int not null,
+    plataforma_id int not null,
+    link_download VARCHAR(255),
     foreign key (jogo_id) references jogo(id),
     foreign key (plataforma_id) references plataforma(id),
     primary key (jogo_id, plataforma_id)
@@ -49,13 +60,13 @@ create table funcionario(
     nome VARCHAR(100) not null,
     cargo ENUM('dev', 'designer', 'tester', 'produtor', 'gerente') not null, -- Acho que pode deixar como enum
     especialidade VARCHAR(255), -- Deixar como varchar mesmo?
-    salario decimal(10, 2) not null,
+    salario decimal(10, 2) not null check (salario >= 0),
     primary key (id)
 );
 
 create table projeto(
-    id int no null auto_increment,
-    jogo_id int,
+    id int not null auto_increment,
+    jogo_id int not null,
     data_inicio date not null,
     data_fim date, -- Não achei necessário ser obrigatório
     estado ENUM('ativo', 'pausado', 'concluido') not null,
@@ -64,8 +75,8 @@ create table projeto(
 );
 
 create table projeto_equipe(
-    projeto_id int,
-    funcionario_id int,
+    projeto_id int not null,
+    funcionario_id int not null,
     papel VARCHAR(50), -- Rever isso, colocar um enum talvez??
     data_entrada date not null,
     foreign key (projeto_id) references projeto(id),
@@ -74,24 +85,24 @@ create table projeto_equipe(
 );
 
 create table atualizacao(
-    id int no null auto_increment,
-    jogo_id int,
-    versao VARCHAR(50), -- Nao sei oq fazer aqui, pois o jogo ja tem uma versao, entao poderiamos atualizar sla
-    descricao VARCHAR(255),
-    data_atualizacao date,\
+    id int not null auto_increment,
+    jogo_id int not null,
+    versao VARCHAR(50) not null, -- Nao sei oq fazer aqui, pois o jogo ja tem uma versao, entao poderiamos atualizar sla
+    descricao text,
+    data_atualizacao date not null,
     foreign key (jogo_id) references jogo(id),
     primary key (id)
 );
 
 create table chamado_suporte(
     id int not null auto_increment,
-    jogo_id int,
-    funcionario_responsavel_id int,
+    jogo_id int not null,
+    funcionario_responsavel_id int not null,
     titulo VARCHAR(100) not null,
-    descricao VARCHAR(255),
+    descricao text,
     prioridade ENUM('baixa', 'media', 'alta', 'critica') not null,
-    estado ENUM('aberto', 'em andamento', 'resolvido', 'fechado') not null,
-    data_abertura date not null,
+    estado ENUM('aberto', 'em_andamento', 'resolvido', 'fechado') not null,
+    data_abertura datetime not null default current_timestamp,
     foreign key (jogo_id) references jogo(id),
     foreign key (funcionario_responsavel_id) references funcionario(id),
     primary key (id)
@@ -99,25 +110,14 @@ create table chamado_suporte(
 
 create table relatorio_bugs(
     id int not null auto_increment,
-    chamado_suporte_id int,
-    funcionario_tester_id int,
-    descricao VARCHAR(255),
-    estado ENUM('novo', 'em análise', 'corrigido', 'ignorado') not null,
+    chamado_suporte_id int not null,
+    funcionario_tester_id int not null,
+    descricao text,
+    estado ENUM('novo', 'em_analise', 'corrigido', 'ignorado') not null,
     foreign key (chamado_suporte_id) references chamado_suporte(id),
     foreign key (funcionario_tester_id) references funcionario(id),
     primary key (id)
 );
-
--- Rever o que precisa ser obrigatorio
-create table publicadora( 
-    id int not null auto_increment,
-    nome VARCHAR(100),  
-    pais VARCHAR(50),
-    contrato_inicio date,
-    contrato_fim date,
-    primary key (id)
-);
-
 
 -- COMANDOS DML
 insert into engine (nome, versao, tipo_licenca, site_oficial) values
@@ -162,7 +162,7 @@ insert into atualizacao (id, jogo_id, versao, descricao, data_atualizacao) value
 (2, 3, '1.0.2', 'Correção de bugs gráficos', '2023-09-10');
 
 insert into chamado_suporte (jogo_id, funcionario_responsavel_id, titulo, descricao, prioridade, estado, data_abertura) VALUES
-(1, 3, 'Bug no menu principal', 'Menu congela ao clicar em "Iniciar"', 'alta', 'aberto', '2025-06-01');
+(1, 3, 'Bug no menu principal', 'Menu congela ao clicar em "Iniciar"', 'alta', 'aberto');
 
 insert into relatorio_bugs (chamado_suporte_id, funcionario_tester_id, descricao, estado) values
 (1, 3, 'Bug reproduzido ao clicar rápido 3x', 'em análise');
