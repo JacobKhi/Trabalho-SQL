@@ -167,3 +167,36 @@ insert into chamado_suporte (jogo_id, funcionario_responsavel_id, titulo, descri
 insert into relatorio_bugs (chamado_suporte_id, funcionario_tester_id, descricao, estado) values
 (1, 3, 'Bug reproduzido ao clicar rápido 3x', 'em_analise');
 
+-- Segunda parte dos comando DML
+
+/*
+politica de reajuste salarial (só se aplica a funcionários que ganham menos de R$ 10.000)
+
+desenvolvedores: receberão um aumento de 10%
+designers e testers: receberão um aumento de 8%
+outros cargos: receberão um aumento padrão de 5%
+*/
+
+update funcionario
+set 
+    salario = case 
+        when cargo = 'dev' then salario * 1.10
+        when cargo in ('designer', 'tester') then salario * 1.08
+        else salario * 1.05
+    end
+where 
+    salario < 10000.00;
+
+/*
+limpeza automática do status dos jogos
+
+se um jogo já foi lançado mas seu status ainda esta como 'em_desenvolvimento',
+o sistema deve corrigir para 'lancado'
+*/
+
+update jogo
+set 
+    estado = 'lancado'
+where 
+    data_lancamento <= CURDATE() 
+    and estado = 'em_desenvolvimento';
