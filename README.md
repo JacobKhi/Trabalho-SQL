@@ -10,6 +10,8 @@ Além de criar jogos, a JVGS também possui um FAQ e um suporte aos jogadores. O
 
 **Modelo Lógico**
 
+![DiagramaDoBancoDeDados](https://github.com/user-attachments/assets/2a145eeb-8487-4fcf-8890-bbd4849fa158)
+
 Publicadora(id (PK), nome, pais, contrato_inicio, contrato_fim)
 
 Engine(id (PK), nome, versao, tipo_licenca, site_oficial)
@@ -30,3 +32,4 @@ Relatorio_Bugs(id (PK), chamado_suporte_id (FK), funcionario_tester_id (FK), des
 Jogo_Plataforma(jogo_id (PK, FK), plataforma_id (PK, FK), link_download)
 
 Projeto_Equipe(projeto_id (PK, FK), funcionario_id (PK, FK), papel, data_entrada)
+
