@@ -10,24 +10,23 @@ Além de criar jogos, a JVGS também possui um FAQ e um suporte aos jogadores. O
 
 **Modelo Lógico**
 
-Engine(id, nome, versao, tipo_licenca, site_oficial)
+Publicadora(id (PK), nome, pais, contrato_inicio, contrato_fim)
 
-Jogo(id, nome, genero, data_lancamento, estado, id_engine)
+Engine(id (PK), nome, versao, tipo_licenca, site_oficial)
 
-Plataforma(id, nome, tipo)
+Funcionario(id (PK), nome, cargo, especialidade, salario)
 
-Jogo_Plataforma(id_jogo, id_plataforma, link_download)
+Plataforma(id (PK), nome, tipo)
 
-Funcionario(id, nome, cargo, especialidade, salario)
+Jogo(id (PK), nome, genero, data_lancamento, estado, engine_id (FK), publicadora_id (FK))
 
-Projeto(id, id_jogo, data_inicio, data_fim, estado)
+Projeto(id (PK), jogo_id (FK), data_inicio, data_fim, estado)
 
-Projeto_Equipe(id_projeto, id_funcionario, papel, data_entrada)
+Atualizacao(id (PK), jogo_id (FK), versao, descricao, data_atualizacao)
+Chamado_Suporte(id (PK), jogo_id (FK), funcionario_responsavel_id (FK), titulo, descricao, prioridade, estado, data_abertura)
 
-Atualizacao(id, id_jogo, versao, descricao, data)
+Relatorio_Bugs(id (PK), chamado_suporte_id (FK), funcionario_tester_id (FK), descricao, estado)
 
-Chamado_Suporte(id, id_jogo, titulo, descricao, prioridade, estado, data_abertura, id_funcionario_responsavel)
+Jogo_Plataforma(jogo_id (PK, FK), plataforma_id (PK, FK), link_download)
 
-Relatorio_Bugs(id, id_chamado, id_funcionario_tester, descricao, estado)
-
-Publicadora(id, nome, pais, contrato_inicio, contrato_fim)
+Projeto_Equipe(projeto_id (PK, FK), funcionario_id (PK, FK), papel, data_entrada)
