@@ -1,8 +1,6 @@
-# JJVGS - Jacob Jose Video Game Studios
+# JJVGS (Jacob Jose Video Game Studios) - Sistema de Banco de Dados
 
 **Minimundo**
-
-# JJVGS (Jacob Jose Video Game Studios) - Sistema de Banco de Dados
 
 ## Sobre o Sistema
 
