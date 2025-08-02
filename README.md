@@ -1,91 +1,84 @@
-# JJVGS (Jacob Jose Video Game Studios) - Sistema de Banco de Dados
+# JJVGS - Jacob Jose Video Game Studios
 
-**Minimundo**
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-## Sobre o Sistema
-
-A empresa **JJVGS (Jacob Jose Video Game Studios)** atua nas áreas de desenvolvimento, publicação e suporte de videogames. Para organizar suas operações e garantir a rastreabilidade dos processos, foi elaborado um sistema de banco de dados que modela as principais entidades envolvidas no ciclo de vida de um jogo, desde a concepção até o suporte pós-lançamento.
+Um sistema de banco de dados relacional projetado para gerenciar o ciclo de vida completo de desenvolvimento e suporte de jogos eletrônicos.
 
 ---
 
-## Entidades do Banco de Dados
+## Sobre o Projeto
 
-### Jogos
-Cada jogo possui informações como:
-* **Nome**
-* **Gênero**
-* **Data de lançamento**
-* **Estado atual:** `planejado`, `em desenvolvimento`, `lançado` ou `cancelado`.
+A JJVGS (Jacob Jose Video Game Studios) é uma empresa fictícia que atua no desenvolvimento, publicação e suporte de videogames. Para gerenciar a complexidade de suas operações, este projeto implementa um banco de dados robusto que centraliza e organiza todas as informações cruciais, desde a concepção de um jogo até o suporte pós-lançamento.
 
-Os jogos são desenvolvidos utilizando uma **engine** específica e são publicados por uma **publicadora**. Além disso, podem ser disponibilizados em múltiplas **plataformas**, com o respectivo link de download.
+O sistema foi projetado para garantir a rastreabilidade dos processos, otimizar a alocação de recursos e fornecer uma base sólida para a tomada de decisões estratégicas.
 
-### Engine
-As engines são ferramentas utilizadas para o desenvolvimento dos jogos. Cada engine cadastrada possui:
-* **Nome**
-* **Versão**
-* **Tipo de licença**
-* **Site oficial**
+## Funcionalidades Principais
 
-### Publicadora
-As publicadoras são responsáveis pela distribuição dos jogos. Para cada publicadora, são armazenados dados como:
-* **Nome**
-* **País de origem**
-* **Data de início de contrato** com a JJVGS
-* **Data de término de contrato** com a JJVGS
+* **Gestão de Catálogo de Jogos:** Cadastro detalhado de jogos, incluindo gênero, estado (planejado, em desenvolvimento, etc.), engines e publicadoras.
+* **Controle de Plataformas:** Gerenciamento de múltiplas plataformas (console, PC, mobile) e associação de jogos a cada uma, com seus respectivos links de download.
+* **Gerenciamento de Projetos e Equipes:** Alocação de funcionários em projetos específicos, com definição de papéis e acompanhamento do estado de cada projeto (ativo, pausado, concluído).
+* **Ciclo de Vida Pós-Lançamento:** Sistema para registro de atualizações e patches de versão para cada jogo.
+* **Sistema de Suporte Técnico:** Abertura e acompanhamento de chamados de suporte, com classificação de prioridade, atribuição de responsáveis e controle de estado.
+* **Análise e Relatório de Bugs:** Ferramenta para que a equipe de QA registre e gerencie relatórios de bugs detalhados, vinculados diretamente aos chamados de suporte dos usuários.
 
-### Plataforma
-As plataformas representam os meios pelos quais os jogos são distribuídos aos usuários. São classificadas por:
-* **Nome**
-* **Tipo:** `console`, `PC`, `mobile`, `web` ou `cloud`.
+## Estrutura do Banco de Dados
 
-Cada jogo pode estar associado a uma ou mais plataformas.
+A arquitetura do banco de dados foi modelada para refletir as relações complexas entre as diferentes entidades do negócio.
 
-### Funcionário
-A empresa mantém um registro de seus funcionários, contendo:
-* **Nome**
-* **Cargo:** `desenvolvedor`, `designer`, `tester`, `produtor` ou `gerente`.
-* **Especialidade**
-* **Salário**
+### Modelo Lógico
+![Diagrama do Banco de Dados](https://github.com/user-attachments/assets/2a145eeb-8487-4fcf-8890-bbd4849fa158)
 
-Esses profissionais são alocados em projetos conforme suas habilidades.
+### Tabelas Principais
+* **`jogo`**: Tabela central que armazena todos os jogos do estúdio.
+* **`publicadora`**, **`engine`**, **`plataforma`**: Tabelas de cadastro para as entidades externas relacionadas aos jogos.
+* **`funcionario`**: Registro de todos os colaboradores da JJVGS.
+* **`projeto`**, **`projeto_equipe`**: Estruturas que definem os projetos de desenvolvimento e as equipes alocadas.
+* **`atualizacao`**: Histórico de versões e patches lançados para os jogos.
+* **`chamado_suporte`**, **`relatorio_bugs`**: Tabelas que formam o sistema de suporte e controle de qualidade.
 
-### Projeto
-Cada jogo possui um ou mais projetos vinculados ao seu desenvolvimento. Esses projetos incluem:
-* **Data de início**
-* **Data de término**
-* **Estado atual do projeto:** `ativo`, `pausado` ou `concluído`.
+## Como Utilizar
 
-### Projeto_Equipe
-O relacionamento entre projetos e funcionários é armazenado em uma entidade que representa a equipe do projeto. Nessa tabela são registrados:
-* O **papel exercido pelo funcionário** no projeto (ex: `programador líder`, `tester QA`).
-* A **data de entrada** do funcionário no projeto.
+Para recriar este banco de dados em seu ambiente local, siga os passos abaixo:
 
-### Atualização
-Após o lançamento, os jogos podem receber atual
+1.  **Clone o Repositório**
+    ```bash
+    git clone https://github.com/JacobKhi/Trabalho-SQL
+    ```
 
+2.  **Execute os Scripts SQL**
+    Conecte-se ao seu servidor MySQL e execute os scripts na seguinte ordem para garantir a correta criação das tabelas e a inserção dos dados:
 
-**Modelo Lógico**
+    ```sql
+    -- 1. Cria a estrutura do banco de dados e todas as tabelas.
+    SOURCE caminho/para/comandos_ddl.sql;
 
-![DiagramaDoBancoDeDados](https://github.com/user-attachments/assets/2a145eeb-8487-4fcf-8890-bbd4849fa158)
+    -- 2. Popula as tabelas com os dados iniciais.
+    SOURCE caminho/para/comandos_dml.sql;
 
-Publicadora(id (PK), nome, pais, contrato_inicio, contrato_fim)
+    -- 3. Executa atualizações em massa para simular evoluções nos dados.
+    SOURCE caminho/para/comandos_dml_update.sql;
+    ```
 
-Engine(id (PK), nome, versao, tipo_licenca, site_oficial)
+## Exemplos de Relatórios
 
-Funcionario(id (PK), nome, cargo, especialidade, salario)
+O arquivo `comandos_dml_relatorios.sql` contém diversas consultas `SELECT` para extrair insights valiosos do banco de dados.
 
-Plataforma(id (PK), nome, tipo)
-
-Jogo(id (PK), nome, genero, data_lancamento, estado, engine_id (FK), publicadora_id (FK))
-
-Projeto(id (PK), jogo_id (FK), data_inicio, data_fim, estado)
-
-Atualizacao(id (PK), jogo_id (FK), versao, descricao, data_atualizacao)
-Chamado_Suporte(id (PK), jogo_id (FK), funcionario_responsavel_id (FK), titulo, descricao, prioridade, estado, data_abertura)
-
-Relatorio_Bugs(id (PK), chamado_suporte_id (FK), funcionario_tester_id (FK), descricao, estado)
-
-Jogo_Plataforma(jogo_id (PK, FK), plataforma_id (PK, FK), link_download)
-
-Projeto_Equipe(projeto_id (PK, FK), funcionario_id (PK, FK), papel, data_entrada)
-
+**Exemplo: Listar todos os funcionários em projetos ativos**
+```sql
+select
+    f.nome as nome_do_funcionario,
+    f.cargo,
+    j.nome as trabalhando_no_jogo,
+    pe.papel as papel_no_projeto
+from
+    funcionario f
+inner join
+    projeto_equipe pe on f.id = pe.funcionario_id
+inner join
+    projeto p on pe.projeto_id = p.id
+inner join
+    jogo j on p.jogo_id = j.id
+where
+    p.estado = 'ativo'
+order by
+    f.nome;
